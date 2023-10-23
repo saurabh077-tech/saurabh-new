@@ -24,11 +24,18 @@ const ApplicationNavigator = () => {
 
   return (
     <SafeAreaView style={[Layout.fill, { backgroundColor: colors.card }]}>
-      <NavigationContainer theme={NavigationTheme} ref={navigationRef}>
+      <NavigationContainer
+        theme={NavigationTheme}
+        ref={navigationRef}
+        // initialState={'Main'}
+      >
         <StatusBar barStyle={darkMode ? 'light-content' : 'dark-content'} />
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Startup" component={Startup} />
+        <Stack.Navigator
+          screenOptions={{ headerShown: false }}
+          initialRouteName="Main"
+        >
           <Stack.Screen name="Main" component={MainNavigator} />
+          <Stack.Screen name="Startup" component={Startup} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaView>

@@ -1,240 +1,232 @@
-import React, { useEffect } from 'react';
 import {
-  View,
-  ActivityIndicator,
+  StyleSheet,
   Text,
-  TouchableOpacity,
-  ScrollView,
+  View,
   Image,
-  Alert,
+  Pressable,
+  useWindowDimensions,
+  FlatList,
+  ScrollView,
 } from 'react-native';
-import { useDispatch } from 'react-redux';
-import { useTranslation } from 'react-i18next';
-import { Brand } from '../../components';
+import React, { useEffect, useState } from 'react';
 import { useTheme } from '../../hooks';
-import { useLazyFetchOneQuery } from '../../services/modules/users';
-import { changeTheme, ThemeState } from '../../store/theme';
-import i18next from 'i18next';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import axios, { Axios } from 'axios';
+import Carousel from 'react-native-reanimated-carousel';
+import { useGetPopluarmovieApiQuery } from '@/services/modules/popluar';
+import { useGetUpcomingmovieApiQuery } from '@/services/modules/upcomming';
+import { useNavigation } from '@react-navigation/native';
 
 const Example = () => {
-  const { t } = useTranslation(['example', 'welcome']);
-  const {
-    Common,
-    Fonts,
-    Gutters,
-    Layout,
-    Images,
-    darkMode: isDark,
-  } = useTheme();
-  const dispatch = useDispatch();
-
-  const [fetchOne, { data, isSuccess, isLoading, isFetching }] =
-    useLazyFetchOneQuery();
-
+  const [popluar, setpopluar] = useState([]);
+  const [upcomming, setupcomming] = useState([]);
+  const { data, isFetching, isLoading } = useGetPopluarmovieApiQuery({});
+  const { data: data1 } = useGetUpcomingmovieApiQuery;
   useEffect(() => {
-    if (isSuccess && data?.name) {
-      Alert.alert(t('example:helloUser', { name: data.name }));
-    }
-  }, [isSuccess, data]);
-
-  const onChangeTheme = ({ theme, darkMode }: Partial<ThemeState>) => {
-    dispatch(changeTheme({ theme, darkMode }));
+    init();
+  }, [isFetching, isLoading]);
+  const init = async () => {
+    setpopluar(data?.results);
+    setupcomming(data1?.results);
   };
-
-  const onChangeLanguage = (lang: 'fr' | 'en') => {
-    i18next.changeLanguage(lang);
-  };
-
+  console.log('sfhsddasdh', data);
+  const dimention = useWindowDimensions();
+  const navigation = useNavigation();
   return (
-    <ScrollView
-      style={Layout.fill}
-      contentContainerStyle={[
-        Layout.fullSize,
-        Layout.fill,
-        Layout.colCenter,
-        Layout.scrollSpaceBetween,
-      ]}
-    >
-      <View
-        style={[
-          Layout.fill,
-          Layout.relative,
-          Layout.fullWidth,
-          Layout.justifyContentCenter,
-          Layout.alignItemsCenter,
-        ]}
-      >
-        <View
-          style={[
-            Layout.absolute,
-            {
-              height: 250,
-              width: 250,
-              backgroundColor: isDark ? '#000000' : '#DFDFDF',
-              borderRadius: 140,
-            },
-          ]}
-        />
+    <View style={{ flex: 1, backgroundColor: '#000' }}>
+      <ScrollView>
         <Image
-          style={[
-            Layout.absolute,
-            {
-              bottom: '-30%',
-              left: 0,
-            },
-          ]}
-          source={Images.sparkles.bottomLeft}
-          resizeMode={'contain'}
+          source={require('@/theme/assets/images/tom_light.png')}
+          style={{ height: 50, width: 50, resizeMode: 'contain' }}
+          height={50}
+          width={50}
+          resizeMode="cover"
         />
+        {/* tabbar area */}
         <View
-          style={[
-            Layout.absolute,
-            {
-              height: 300,
-              width: 300,
-              transform: [{ translateY: 40 }],
-            },
-          ]}
+          style={{
+            display: 'flex',
+            flexDirection: 'row',
+            marginLeft: 10,
+            padding: 5,
+            height: 50,
+            // borderWidth: 2,
+            // borderColor: '#000',
+          }}
         >
-          <Brand height={300} width={300} />
+          <TouchableOpacity
+            style={styles.tabstyle}
+            onPress={() => navigation.navigate('Startup')}
+          >
+            <Text style={styles.tabtext}>Popler</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.tabstyle}>
+            <Text style={styles.tabtext}>upcoming</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.tabstyle}>
+            <Text style={styles.tabtext}>clasic</Text>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.tabstyle}>
+            <Text style={styles.tabtext}>top10</Text>
+          </TouchableOpacity>
         </View>
-        <Image
-          style={[
-            Layout.absolute,
-            Layout.fill,
-            {
-              top: 0,
-              left: 0,
-            },
-          ]}
-          source={Images.sparkles.topLeft}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '-5%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.top}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '15%',
-              right: 20,
-            },
-          ]}
-          source={Images.sparkles.topRight}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              bottom: '-10%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.right}
-          resizeMode={'contain'}
-        />
-
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '75%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.bottom}
-          resizeMode={'contain'}
-        />
-        <Image
-          style={[
-            Layout.absolute,
-            {
-              top: '60%',
-              right: 0,
-            },
-          ]}
-          source={Images.sparkles.bottomRight}
-          resizeMode={'contain'}
-        />
-      </View>
-      <View
-        style={[
-          Layout.fill,
-          Layout.justifyContentBetween,
-          Layout.alignItemsStart,
-          Layout.fullWidth,
-          Gutters.regularHPadding,
-        ]}
-      >
+        <Text
+          style={{ color: '#fff', fontSize: 20, fontWeight: '600', top: 1 }}
+        >
+          Now playing
+        </Text>
         <View>
-          <Text style={[Fonts.titleRegular]}>{t('welcome:title')}</Text>
-          <Text
-            style={[Fonts.textBold, Fonts.textRegular, Gutters.regularBMargin]}
-          >
-            {t('welcome:subtitle')}
-          </Text>
-          <Text style={[Fonts.textSmall, Fonts.textLight]}>
-            {t('welcome:description')}
-          </Text>
-        </View>
-
-        <View
-          style={[
-            Layout.row,
-            Layout.justifyContentBetween,
-            Layout.fullWidth,
-            Gutters.smallTMargin,
-          ]}
-        >
-          <TouchableOpacity
-            style={[Common.button.circle, Gutters.regularBMargin]}
-            onPress={() => fetchOne(`${Math.ceil(Math.random() * 10 + 1)}`)}
-          >
-            {isFetching || isLoading ? (
-              <ActivityIndicator />
-            ) : (
-              <Image
-                source={Images.icons.send}
-                style={{ tintColor: isDark ? '#A6A4F0' : '#44427D' }}
-              />
+          <Carousel
+            height={400}
+            width={dimention.width}
+            data={popluar as unknown[]}
+            autoPlay
+            mode="parallax"
+            parallaxScrollingOffset={50}
+            parallaxScrollingScale={0.9}
+            renderItem={({ item, index }) => (
+              <View
+                key={item?.id}
+                style={{
+                  width: dimention.width,
+                  // alignItems: 'center',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  // borderWidth: 2,
+                  // borderColor: '#000',
+                }}
+              >
+                <Image
+                  source={{
+                    uri: `https://www.themoviedb.org/t/p/w440_and_h660_face${item.backdrop_path}`,
+                  }}
+                  resizeMode="cover"
+                  style={{
+                    height: 400,
+                    width: '100%',
+                    borderRadius: 10,
+                  }}
+                />
+                <Text
+                  style={{
+                    color: '#fff',
+                    fontSize: 20,
+                    fontWeight: '600',
+                    maxHeight: 24,
+                  }}
+                >
+                  {item?.original_title}
+                </Text>
+              </View>
             )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[Common.button.circle, Gutters.regularBMargin]}
-            onPress={() => onChangeTheme({ darkMode: !isDark })}
-          >
-            <Image
-              source={Images.icons.colors}
-              style={{ tintColor: isDark ? '#A6A4F0' : '#44427D' }}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[Common.button.circle, Gutters.regularBMargin]}
-            onPress={() =>
-              onChangeLanguage(i18next.language === 'fr' ? 'en' : 'fr')
-            }
-          >
-            <Image
-              source={Images.icons.translate}
-              style={{ tintColor: isDark ? '#A6A4F0' : '#44427D' }}
-            />
-          </TouchableOpacity>
+          />
         </View>
-      </View>
-    </ScrollView>
+        <Text style={{ color: '#f0f0f0', fontSize: 20, fontWeight: '600' }}>
+          Popluar
+        </Text>
+
+        <FlatList
+          data={popluar as unknown[]}
+          horizontal
+          renderItem={({ item }) => (
+            <View
+              key={item?.id}
+              style={{
+                width: dimention.width / 3.1,
+                // alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                borderWidth: 2,
+                borderColor: '#000',
+              }}
+            >
+              <Image
+                source={{
+                  uri: `https://www.themoviedb.org/t/p/w440_and_h660_face${item.backdrop_path}`,
+                }}
+                resizeMode="cover"
+                style={{
+                  height: 200,
+                  width: '100%',
+                  borderRadius: 10,
+                }}
+              />
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 14,
+                  fontWeight: '400',
+                  maxHeight: 24,
+                }}
+              >
+                {item?.original_title}
+              </Text>
+            </View>
+          )}
+        />
+        <Text style={{ color: '#f0f0f0', fontSize: 20, fontWeight: '600' }}>
+          upcoming
+        </Text>
+
+        <FlatList
+          data={upcomming as unknown[]}
+          horizontal
+          renderItem={({ item }) => (
+            <View
+              key={item?.id}
+              style={{
+                width: dimention.width / 3.1,
+                // alignItems: 'center',
+                display: 'flex',
+                justifyContent: 'center',
+                borderWidth: 2,
+                borderColor: '#000',
+              }}
+            >
+              <Image
+                source={{
+                  uri: `https://www.themoviedb.org/t/p/w440_and_h660_face${item.backdrop_path}`,
+                }}
+                resizeMode="cover"
+                style={{
+                  height: 200,
+                  width: '100%',
+                  borderRadius: 10,
+                }}
+              />
+              <Text
+                style={{
+                  color: '#fff',
+                  fontSize: 14,
+                  fontWeight: '400',
+                  maxHeight: 24,
+                }}
+              >
+                {item?.original_title}
+              </Text>
+            </View>
+          )}
+        />
+      </ScrollView>
+    </View>
   );
 };
 
 export default Example;
+
+const styles = StyleSheet.create({
+  tabstyle: {
+    padding: 2,
+    margin: 3,
+    borderRadius: 15,
+    borderColor: '#fff',
+    borderWidth: 1,
+  },
+  tabtext: {
+    fontWeight: '400',
+    fontSize: 10,
+    color: '#fff',
+    paddingHorizontal: 4,
+    paddingVertical: 2,
+  },
+});
