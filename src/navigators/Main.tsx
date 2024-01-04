@@ -4,7 +4,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import profile from '@/screens/Example/profile';
-import Search from '@/screens/Example/Search';
+import Weather from '@/screens/Example/Weather';
 
 // const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -13,9 +13,9 @@ const Tab = createBottomTabNavigator();
 const MainNavigator = () => {
   return (
     <Tab.Navigator screenOptions={{ headerShown: false }}>
-      <Tab.Screen name="Home" component={Example} />
+      <Tab.Screen name="Weather" component={Weather} />
       <Tab.Screen name="profile" component={profile} />
-      <Tab.Screen name="Search" component={Search} />
+      <Tab.Screen name="Home" component={Example} />
     </Tab.Navigator>
   );
 };

@@ -14,22 +14,22 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import axios, { Axios } from 'axios';
 import Carousel from 'react-native-reanimated-carousel';
 import { useGetPopluarmovieApiQuery } from '@/services/modules/popluar';
-import { useGetUpcomingmovieApiQuery } from '@/services/modules/upcomming';
 import { useNavigation } from '@react-navigation/native';
+import { useGetUpcomingmovieApiQuery } from '@/services/modules/upcomming';
 
 const Example = () => {
   const [popluar, setpopluar] = useState([]);
   const [upcomming, setupcomming] = useState([]);
   const { data, isFetching, isLoading } = useGetPopluarmovieApiQuery({});
-  const { data: data1 } = useGetUpcomingmovieApiQuery;
+  // const{data:data1,isFetching} = useGetUpcomingmovieApiQuery
   useEffect(() => {
     init();
   }, [isFetching, isLoading]);
   const init = async () => {
     setpopluar(data?.results);
-    setupcomming(data1?.results);
+    // setupcomming(data1?.results);
   };
-  console.log('sfhsddasdh', data);
+  // console.log('sfhsddasdh', data1);
   const dimention = useWindowDimensions();
   const navigation = useNavigation();
   return (
